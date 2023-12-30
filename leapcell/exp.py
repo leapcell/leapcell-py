@@ -1,0 +1,2 @@
+class LeapcellException(Exception):
+    pass
