@@ -1,4 +1,26 @@
-# Python Library
+<h1 align="center" style="border-bottom: none">
+    <div>
+        <a href="https://leapcell.io">
+            <img src="/assets/readme_logo.png" />
+            <br>
+            <br>
+            Leapcell Python Library
+        </a>
+    </div>
+    <br>
+</h1>
+
+<p align="center">
+    <a href="http://leapcell.io"><b>Website</b></a> •
+    <a href="http://docs.leapcell.io"><b>Documentation</b></a> •
+    <a href="https://discord.gg/bnXWDeug5U"><b>Discord</b></a> •
+    <a href="https://twitter.com/LeapcellDev"><b>Twitter</b></a>
+</p>
+
+## Documentation
+See the [Doc](https://docs.leapcell.io/docs/data)
+
+See the [API reference](https://docs.leapcell.io/api/)
 
 ## Installation
 
@@ -6,11 +28,87 @@
 pip install leapcell
 ```
 
+## Preparation
+
+Leapcell uses an `API Token` to access the Leapcell API. You can learn more about the API Token [here](https://docs.leapcell.io/docs/authentication).
+
+## Quick Start
+
+```python
+from leapcell import Leapcell
+import os
+
+# Get API token from env
+api_token = os.environ.get("LEAPCELL_API_KEY")
+
+# Initialize client with the token
+leapclient = Leapcell(api_token)
+
+# Initialize table instance
+# Get table id from url, e.g., https://leapcell.io/issac/blog/table/12345678, then table id is 12345678
+# Get repo name from url, e.g., https://leapcell.io/issac/blog/table/12345678, then repo name is issac/blog
+table = leapclient.table("{{REPO_NAME}}", "{{TABLE_ID}}")
+
+# Create a record
+record = table.create({"title": "hello issac"})
+
+# Update a record
+record["title"] = "hello issac again"
+record.save()
+
+# Get a record by ID
+record = table.get_by_id(record.id)
+
+# Delete a record
+record.delete()
+
+# Get record if title is hello
+records = table.select().where(table["title"] == "hello").limit(10).offset(0).first()
+
+# Get record with sorting
+records = table.select().where(table["title"] == "hello").order_by(table['title'].asc()).query()
+
+# Update records
+table.select().where(
+    {
+        "title": "hello issac again",
+    }
+).update(
+    {
+        "title": "here is leapcell",
+    }
+)
+
+# Delete records
+table.select().where(
+    {
+        "title": "hello issac again",
+    }
+).delete()
+
+# Bulk create
+records = table.bulk_create(
+    [
+        {
+            "title": "hello issac",
+        },
+        {
+            "title": "hello jude",
+        },
+    ]
+)
+
+# Search, like a search engine
+records = table.search("hello jude")
+
+# Search in the "title" field
+records = table.search("hello", fields=["title"])
+
+# Count records
+count = table.select().where(table["title"] == "hello").count()
+```
+
 ## Usage
-
-### Preparation
-
-Leapcell uses an `API Token` for API access. Learn more about API Tokens [here](https://docs.leapcell.com/api/overview#authentication).
 
 ### Initializing the Client
 
